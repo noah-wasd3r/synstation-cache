@@ -51,8 +51,7 @@ async function fetchFromPonder<T>(endpoint: string): Promise<T> {
 }
 
 export async function fetchPonderData<T>(endpoint: string, options: PonderFetchOptions = {}): Promise<any> {
-  const { forceFetch = false } = options;
-  const cacheKey = endpoint.replace(/[^a-zA-Z0-9]/g, '_');
+  const cacheKey = options.cacheKey ?? endpoint.replace(/[^a-zA-Z0-9]/g, '_');
   // if (!forceFetch) {
   //   const cached = await getFromCache<T>(cacheKey);
   //   const ponderMaxCacheTime = Number(process.env.PONDER_MAXIMUM_CACHE_TIME ?? 60);

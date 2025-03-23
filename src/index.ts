@@ -11,7 +11,11 @@ const app = new Hono();
 app.use('*', cache({ blacklist: ['/favicon.ico'] }));
 
 app.get('*', async (c) => {
-  const data = await fetchPonderData(c.req.path);
+  const url = new URL(c.req.url);
+
+  url.searchParams.delete('forceFetch');
+  const cacheKey = `${url.pathname}${url.search}`.replace(/[^a-zA-Z0-9]/g, '_');
+  const data = await fetchPonderData(c.req.path, { cacheKey });
   return c.json(data);
 });
 app.get('/', (c) => c.text('Hono!'));

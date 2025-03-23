@@ -5,5 +5,6 @@ export interface PonderCacheData<T> {
 }
 
 export interface PonderFetchOptions {
+  cacheKey?: string;
   forceFetch?: boolean;
 }

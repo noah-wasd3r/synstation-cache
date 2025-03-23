@@ -49,13 +49,16 @@ export function cache(options: CacheOptions = {}): MiddlewareHandler {
     // Only cache GET requests
     if (c.req.method !== 'GET') return next();
 
-    // Generate cache key from URL
-    const url = new URL(c.req.url);
-    const cacheKey = `${url.pathname}${url.search}`.replace(/[^a-zA-Z0-9]/g, '_');
-
     // Check if force refresh is requested
     const forceFetch = c.req.query('forceFetch') === 'true';
     console.log('forceFetch', forceFetch);
+
+    // Generate cache key from URL
+    const url = new URL(c.req.url);
+    url.searchParams.delete('forceFetch');
+    const cacheKey = `${url.pathname}${url.search}`.replace(/[^a-zA-Z0-9]/g, '_');
+
+    console.log('cacheKey', cacheKey);
 
     if (!forceFetch) {
       const cached = await getCachedResponse(cacheKey);
