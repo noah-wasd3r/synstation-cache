@@ -41,10 +41,10 @@ async function fetchFromPonder<T>(endpoint: string): Promise<T> {
     return '' as T;
   }
 
+  console.log('try response', `${baseUrl}${endpoint}`);
   const response = await fetch(`${baseUrl}${endpoint}`, {
     signal: AbortSignal.timeout(5000),
   });
-  console.log('response', `${baseUrl}${endpoint}`);
   if (!response.ok) {
     throw new Error(`Ponder API error: ${response.statusText}`);
   }
