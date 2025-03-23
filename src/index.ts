@@ -8,9 +8,15 @@ import { cache } from './middleware/cache';
 const app = new Hono();
 
 // Apply cache middleware to all routes
-app.use('*', cache());
+app.use('*', cache({ blacklist: ['/favicon.ico'] }));
 
+app.get('*', async (c) => {
+  const data = await fetchPonderData(c.req.path);
+  return c.json(data);
+});
 app.get('/', (c) => c.text('Hono!'));
+
+app.get('/favicon.ico', (c) => c.text(''));
 
 const MarketQuerySchema = z.object({
   marketIndex: z.string().optional(),
@@ -75,11 +81,6 @@ app.get('/conditions', async (c) => {
       500
     );
   }
-});
-
-app.get('*', async (c) => {
-  const data = await fetchPonderData(c.req.path);
-  return c.json(data);
 });
 
 export default app;

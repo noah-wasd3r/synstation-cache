@@ -6,6 +6,7 @@ const CACHE_DIR = path.join(process.cwd(), 'cache', 'api');
 
 interface CacheOptions {
   maxAge?: number; // seconds
+  blacklist?: string[];
 }
 
 async function ensureCacheDir() {
@@ -37,9 +38,14 @@ async function setCachedResponse(key: string, data: any): Promise<void> {
 }
 
 export function cache(options: CacheOptions = {}): MiddlewareHandler {
-  const { maxAge = Number(process.env.API_CACHE_MAX_AGE ?? 60) } = options;
+  const { maxAge = Number(process.env.API_CACHE_MAX_AGE ?? 60), blacklist = ['/favicon.ico'] } = options;
 
   return async (c: Context, next: Function) => {
+    // Skip caching for blacklisted paths
+    if (blacklist.includes(c.req.path)) {
+      return next();
+    }
+
     // Only cache GET requests
     if (c.req.method !== 'GET') return next();
 
