@@ -38,6 +38,7 @@ async function fetchFromPonder<T>(endpoint: string): Promise<T> {
   if (!baseUrl) throw new Error('PONDER_BASE_URL is not defined');
 
   const response = await fetch(`${baseUrl}${endpoint}`, {});
+  console.log('response', `${baseUrl}${endpoint}`);
   if (!response.ok) {
     throw new Error(`Ponder API error: ${response.statusText}`);
   }
