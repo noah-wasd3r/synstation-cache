@@ -2,8 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import type { PonderCacheData, PonderFetchOptions } from '../types/ponder';
 
-const CACHE_DIR = path.join(process.cwd(), 'cache');
-const DEFAULT_CACHE_TIME = 5 * 60 * 1000; // 5분
+const CACHE_DIR = path.join(process.cwd(), 'cache', 'api');
 
 async function ensureCacheDir() {
   try {
@@ -38,7 +37,7 @@ async function fetchFromPonder<T>(endpoint: string): Promise<T> {
   const baseUrl = process.env.PONDER_BASE_URL;
   if (!baseUrl) throw new Error('PONDER_BASE_URL is not defined');
 
-  const response = await fetch(`${baseUrl}${endpoint}`);
+  const response = await fetch(`${baseUrl}${endpoint}`, {});
   if (!response.ok) {
     throw new Error(`Ponder API error: ${response.statusText}`);
   }

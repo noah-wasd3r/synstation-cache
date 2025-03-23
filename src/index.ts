@@ -3,8 +3,12 @@ import { z } from 'zod';
 import { fetchPonderData } from './utils/ponder-service';
 import { isAddress } from 'viem';
 import { getERC20Balances } from './utils/erc20-balance';
+import { cache } from './middleware/cache';
 
 const app = new Hono();
+
+// Apply cache middleware to all routes
+app.use('*', cache());
 
 app.get('/', (c) => c.text('Hono!'));
 
@@ -71,6 +75,11 @@ app.get('/conditions', async (c) => {
       500
     );
   }
+});
+
+app.get('*', async (c) => {
+  const data = await fetchPonderData(c.req.path);
+  return c.json(data);
 });
 
 export default app;
