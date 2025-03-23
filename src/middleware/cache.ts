@@ -55,6 +55,7 @@ export function cache(options: CacheOptions = {}): MiddlewareHandler {
 
     // Check if force refresh is requested
     const forceFetch = c.req.query('forceFetch') === 'true';
+    console.log('forceFetch', forceFetch);
 
     if (!forceFetch) {
       const cached = await getCachedResponse(cacheKey);
@@ -67,12 +68,5 @@ export function cache(options: CacheOptions = {}): MiddlewareHandler {
 
     // If not cached or cache expired, proceed with the request
     await next();
-
-    // Cache the response if it's successful
-    if (c.res.status === 200) {
-      const responseData = await c.res.json();
-      await setCachedResponse(cacheKey, responseData);
-      return c.json(responseData);
-    }
   };
 }
