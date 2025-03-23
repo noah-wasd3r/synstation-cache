@@ -15,7 +15,7 @@ app.get('*', async (c) => {
 
   url.searchParams.delete('forceFetch');
   const cacheKey = `${url.pathname}${url.search}`.replace(/[^a-zA-Z0-9]/g, '_');
-  const data = await fetchPonderData(c.req.path, { cacheKey });
+  const data = await fetchPonderData(`${url.pathname}${url.search}`, { cacheKey });
   return c.json(data);
 });
 app.get('/', (c) => c.text('Hono!'));
