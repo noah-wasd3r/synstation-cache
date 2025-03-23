@@ -67,6 +67,11 @@ export async function fetchPonderData<T>(endpoint: string, options: PonderFetchO
 
   try {
     const data = await fetchFromPonder<T>(endpoint);
+
+    if (Array.isArray(data) && data.length === 0) {
+      throw new Error(`No data [] returned from Ponder ${endpoint}`);
+    }
+
     await saveToCache(cacheKey, data);
     return data;
   } catch (error) {
